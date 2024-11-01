@@ -1,0 +1,64 @@
+﻿<div style="max-width: 600px; margin: auto; padding: 24px; display: flex; flex-direction: column; gap: 24px;">
+    <IgbGrid Data="_currentData"
+             Height="400px"
+             PrimaryKey="@nameof(Person.Id)"
+             IsLoading="_isLoading"
+             AutoGenerate="false">
+        <IgbColumn Field="@nameof(Person.Name)" Header="氏名"></IgbColumn>
+        <IgbColumn Field="@nameof(Person.Age)" Header="年齢" DataType="GridColumnDataType.Number"></IgbColumn>
+        <IgbColumn Field="@nameof(Person.JobTitle)" Header="職種"></IgbColumn>
+    </IgbGrid>
+    <div>
+        <IgbButton @onclick="OnClickSwitchData">
+            データソースの切り替え
+        </IgbButton>
+    </div>
+
+</div>
+
+@code {
+    private bool _isLoading;
+    private List<Person> _currentData = new();
+    protected override async Task OnInitializedAsync()
+    {
+        _isLoading = true;
+        await Task.Delay(1000);
+        _currentData = _peopleEN;
+        _isLoading = false;
+    }
+
+    private async Task OnClickSwitchData()
+    {
+        var newData = _currentData == _peopleEN ? _peopleJP : _peopleEN;
+        _currentData = new();
+        _isLoading = true;
+        await Task.Delay(1000);
+        _currentData = newData;
+        _isLoading = false;
+    }
+
+    public class Person
+    {
+        public int Id { get; set; }
+        public string? Name { get; set; }
+        public int Age { get; set; }
+        public string? JobTitle { get; set; }
+    }
+
+    private List<Person> _peopleEN = new()
+    {
+        new() { Id = 1, Name = "Bob", Age = 30, JobTitle = "Developer" },
+        new() { Id = 2, Name = "Alice", Age = 25, JobTitle = "Support" },
+        new() { Id = 3, Name = "John", Age = 40, JobTitle = "Manager" },
+        new() { Id = 4, Name = "Emily", Age = 35, JobTitle = "Marketing" },
+        new() { Id = 5, Name = "David", Age = 28, JobTitle = "Sales" }
+    };
+    private List<Person> _peopleJP = new()
+    {
+        new() { Id = 1, Name = "ボブ", Age = 30, JobTitle = "開発者" },
+        new() { Id = 2, Name = "アリス", Age = 25, JobTitle = "サポート" },
+        new() { Id = 3, Name = "ジョン", Age = 40, JobTitle = "マネージャー" },
+        new() { Id = 4, Name = "エミリー", Age = 35, JobTitle = "マーケティング" },
+        new() { Id = 5, Name = "デイビッド", Age = 28, JobTitle = "セールス" }
+    };
+}
